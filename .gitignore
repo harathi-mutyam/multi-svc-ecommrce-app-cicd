@@ -1,11 +1,20 @@
+# Terraform
 .terraform/
 *.tfstate
 *.tfstate.*
-.venv/
-__pycache__/
-.pytest_cache/
-node_modules/
-frontend/dist/
+*.tfvars
+!*.tfvars.example
+crash.log
+
+# Environment
 .env
-*.log
-.DS_Store
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+
+# IDE
+.vscode/
+.idea/

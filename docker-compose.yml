@@ -1,0 +1,84 @@
+services:
+  user-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: users
+      POSTGRES_USER: ecommerce
+      POSTGRES_PASSWORD: ecommerce123
+    volumes: [user-db-data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U ecommerce -d users"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  product-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: products
+      POSTGRES_USER: ecommerce
+      POSTGRES_PASSWORD: ecommerce123
+    volumes: [product-db-data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U ecommerce -d products"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  order-db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: orders
+      POSTGRES_USER: ecommerce
+      POSTGRES_PASSWORD: ecommerce123
+    volumes: [order-db-data:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U ecommerce -d orders"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  user-service:
+    build: ./services/user-service
+    environment:
+      DB_HOST: user-db
+      DB_NAME: users
+      DB_USER: ecommerce
+      DB_PASSWORD: ecommerce123
+    depends_on:
+      user-db: {condition: service_healthy}
+
+  product-service:
+    build: ./services/product-service
+    environment:
+      DB_HOST: product-db
+      DB_NAME: products
+      DB_USER: ecommerce
+      DB_PASSWORD: ecommerce123
+    depends_on:
+      product-db: {condition: service_healthy}
+
+  order-service:
+    build: ./services/order-service
+    environment:
+      DB_HOST: order-db
+      DB_NAME: orders
+      DB_USER: ecommerce
+      DB_PASSWORD: ecommerce123
+    depends_on:
+      order-db: {condition: service_healthy}
+
+  api-gateway:
+    build: ./api-gateway
+    ports: ["8081:8080"]
+    depends_on: [user-service, product-service, order-service]
+
+  frontend:
+    build: ./frontend
+    ports: ["8080:80"]
+    depends_on: [api-gateway]
+
+volumes:
+  user-db-data:
+  product-db-data:
+  order-db-data:

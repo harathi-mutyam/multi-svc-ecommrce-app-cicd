@@ -1,0 +1,122 @@
+name: E-Commerce Microservices CI/CD
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "k8s/**"
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  ECR_REGISTRY: ${{ vars.ECR_REGISTRY }}
+
+jobs:
+  test:
+    runs-on: [self-hosted, linux, x64, ecommerce-runner]
+    strategy:
+      matrix:
+        service: [user-service, product-service, order-service]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test ${{ matrix.service }}
+        working-directory: services/${{ matrix.service }}
+        run: |
+          python3 -m venv .venv
+          . .venv/bin/activate
+          pip install -r requirements.txt
+          pytest -q
+
+  frontend-build:
+    runs-on: [self-hosted, linux, x64, ecommerce-runner]
+    steps:
+      - uses: actions/checkout@v4
+      - working-directory: frontend
+        run: |
+          npm install
+          npm run build
+
+  sonar:
+    runs-on: [self-hosted, linux, x64, ecommerce-runner]
+    needs: [test, frontend-build]
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+
+  build-push:
+    runs-on: [self-hosted, linux, x64, ecommerce-runner]
+    needs: sonar
+    strategy:
+      fail-fast: false
+      matrix:
+        component: [frontend, api-gateway, user-service, product-service, order-service]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Resolve context
+        id: ctx
+        run: |
+          case "${{ matrix.component }}" in
+            frontend|api-gateway) DIR="${{ matrix.component }}" ;;
+            *) DIR="services/${{ matrix.component }}" ;;
+          esac
+          echo "dir=$DIR" >> "$GITHUB_OUTPUT"
+
+      - name: Build
+        run: |
+          TAG="${GITHUB_SHA::12}"
+          IMAGE="${ECR_REGISTRY}/ecommerce/${{ matrix.component }}:${TAG}"
+          docker build -t "$IMAGE" "${{ steps.ctx.outputs.dir }}"
+          echo "IMAGE=$IMAGE" >> "$GITHUB_ENV"
+
+      - name: Trivy
+        run: trivy image --exit-code 0 --severity HIGH,CRITICAL --ignore-unfixed "$IMAGE"
+
+      - name: Push
+        if: github.event_name != 'pull_request'
+        run: docker push "$IMAGE"
+
+  gitops-update:
+    runs-on: [self-hosted, linux, x64, ecommerce-runner]
+    needs: build-push
+    if: github.event_name != 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITOPS_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: Update Kubernetes manifest image tags
+        run: |
+          TAG="${GITHUB_SHA::12}"
+          sed -i "s#image: .*/ecommerce/frontend:.*#image: ${ECR_REGISTRY}/ecommerce/frontend:${TAG}#" k8s/09-frontend.yaml
+          sed -i "s#image: .*/ecommerce/api-gateway:.*#image: ${ECR_REGISTRY}/ecommerce/api-gateway:${TAG}#" k8s/08-api-gateway.yaml
+          sed -i "s#image: .*/ecommerce/user-service:.*#image: ${ECR_REGISTRY}/ecommerce/user-service:${TAG}#" k8s/05-user-service.yaml
+          sed -i "s#image: .*/ecommerce/product-service:.*#image: ${ECR_REGISTRY}/ecommerce/product-service:${TAG}#" k8s/06-product-service.yaml
+          sed -i "s#image: .*/ecommerce/order-service:.*#image: ${ECR_REGISTRY}/ecommerce/order-service:${TAG}#" k8s/07-order-service.yaml
+
+      - name: Commit Kubernetes GitOps changes
+        run: |
+          git config user.name "ecommerce-ci[bot]"
+          git config user.email "ecommerce-ci@local"
+          git add k8s/
+          git diff --cached --quiet && exit 0
+          git commit -m "ci: update Kubernetes images ${GITHUB_SHA::12}"
+          git push origin main

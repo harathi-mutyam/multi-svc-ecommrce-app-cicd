@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: ecommerce-alerts
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: ecommerce.rules
+      rules:
+        - alert: EcommercePodNotReady
+          expr: kube_pod_status_ready{namespace="ecommerce",condition="true"} == 0
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "E-Commerce pod is not ready"
+            description: "A pod in namespace ecommerce has remained unready for 5 minutes."

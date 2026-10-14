@@ -55,7 +55,7 @@ spec:
     spec:
       containers:
         - name: api-gateway
-          image: 263860684319.dkr.ecr.eu-north-1.amazonaws.com/ecommerce/api-gateway:6f824de4f96f
+          image: 263860684319.dkr.ecr.eu-north-1.amazonaws.com/ecommerce/api-gateway:ecb57d738e34
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: REPLACE_GITHUB_REPO_URL
+    repoURL: https://github.com/harathi-mutyam/multi-svc-ecommrce-app-cicd.git
     targetRevision: main
     path: k8s
     directory:

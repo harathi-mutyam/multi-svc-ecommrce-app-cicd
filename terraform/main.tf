@@ -52,7 +52,7 @@ module "eks" {
     main = {
       instance_types = ["c7i-flex.large"]
       min_size       = 1
-      desired_size   = 1
+      desired_size   = 2
       max_size       = 2
 
       capacity_type = "ON_DEMAND"

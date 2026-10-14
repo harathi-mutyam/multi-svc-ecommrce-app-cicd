@@ -30,7 +30,10 @@ module "eks" {
   addons = {
     coredns = {}
     kube-proxy = {}
-    vpc-cni = {}
+    vpc-cni = {
+      before_compute = true      
+
+    }
     eks-pod-identity-agent = {}
     aws-ebs-csi-driver = {}
   }
@@ -45,6 +48,8 @@ module "eks" {
       min_size = 1
       desired_size = 1
       max_size = 2
+
+      capacity_type = "ON_DEMAND"
     }
   }
 }

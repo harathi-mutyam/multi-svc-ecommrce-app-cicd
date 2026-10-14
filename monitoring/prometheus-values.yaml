@@ -45,3 +45,8 @@ prometheusOperator:
     limits:
       cpu: 200m
       memory: 256Mi
+kubeControllerManager:
+  enabled: false
+
+kubeScheduler:
+  enabled: false

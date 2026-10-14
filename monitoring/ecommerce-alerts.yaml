@@ -9,11 +9,63 @@ spec:
   groups:
     - name: ecommerce.rules
       rules:
+
         - alert: EcommercePodNotReady
-          expr: kube_pod_status_ready{namespace="ecommerce",condition="true"} == 0
+          expr: |
+            kube_pod_status_ready{
+              namespace="ecommerce",
+              condition="true"
+            } == 0
+          for: 2m
+          labels:
+            severity: warning
+            application: ecommerce
+          annotations:
+            summary: "Ecommerce pod is not ready"
+            description: "Pod {{ $labels.pod }} has been unready for more than 2 minutes."
+
+        - alert: EcommerceDeploymentUnavailable
+          expr: |
+            (
+              kube_deployment_spec_replicas{
+                namespace="ecommerce"
+              }
+              -
+              kube_deployment_status_replicas_available{
+                namespace="ecommerce"
+              }
+            ) > 0
+          for: 2m
+          labels:
+            severity: critical
+            application: ecommerce
+          annotations:
+            summary: "Ecommerce deployment unavailable"
+            description: "Deployment {{ $labels.deployment }} has fewer available replicas than desired."
+
+        - alert: EcommerceHighMemoryUsage
+          expr: |
+            (
+              sum by (namespace, pod, container) (
+                container_memory_working_set_bytes{
+                  namespace="ecommerce",
+                  container!="",
+                  container!="POD"
+                }
+              )
+              /
+              sum by (namespace, pod, container) (
+                kube_pod_container_resource_limits{
+                  namespace="ecommerce",
+                  resource="memory",
+                  unit="byte"
+                }
+              )
+            ) > 0.8
           for: 5m
           labels:
             severity: warning
+            application: ecommerce
           annotations:
-            summary: "E-Commerce pod is not ready"
-            description: "A pod in namespace ecommerce has remained unready for 5 minutes."
+            summary: "High Ecommerce container memory usage"
+            description: "Container {{ $labels.container }} in pod {{ $labels.pod }} is using more than 80% of its memory limit."

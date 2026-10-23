@@ -749,6 +749,8 @@ terraform output cluster_name
 ```bash
 terraform output ecr_urls
 ```
+output will be
+```bash
 {
   "ecommerce/api-gateway" = "263860684319.dkr.ecr.eu-north-1.amazonaws.com/ecommerce/api-gateway"
   "ecommerce/frontend" = "263860684319.dkr.ecr.eu-north-1.amazonaws.com/ecommerce/frontend"
@@ -756,15 +758,19 @@ terraform output ecr_urls
   "ecommerce/product-service" = "263860684319.dkr.ecr.eu-north-1.amazonaws.com/ecommerce/product-service"
   "ecommerce/user-service" = "263860684319.dkr.ecr.eu-north-1.amazonaws.com/ecommerce/user-service"
 }
+```
 ```bash
 kubectl get pods -A
 ```
 all pods must be in running state
 ```bash
 kubectl get storageclass
-```
+
 NAME   PROVISIONER             RECLAIMPOLICY   VOLUMEBINDINGMODE      ALLOWVOLUMEEXPANSION   AGE
 gp3    kubernetes.io/aws-ebs   Delete          WaitForFirstConsumer   false                  68m
+```
+
+
 ```bash
 aws eks list-addons \
   --cluster-name ecommerce-cluster \

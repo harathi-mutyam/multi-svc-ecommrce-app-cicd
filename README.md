@@ -1975,13 +1975,12 @@ In Grafana:
 | 3. | Click Add visualization. |
 | 4. | Select the loki data source. |
 | 5. | Select all Visulaisation -->search logs -->Choose the Logs visualization. |
-| 6. | Enter the query: |
-```bash
-{namespace="ecommerce"}
-```
-7.	Set the panel title to Ecommerce — All Application Logs.
+| 6. | Enter the query:  {namespace="ecommerce"} | 
+|7.	|Set the panel title to Ecommerce — All Application Logs.|
 | 8. | Click Apply. |
+
 Repeat for these panels:
+
 | Panel title | Query |
 | --- | --- |
 | Frontend Logs | {namespace="ecommerce", container="frontend"} |

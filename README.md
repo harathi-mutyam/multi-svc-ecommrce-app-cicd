@@ -2188,6 +2188,7 @@ done
 
 ```
 AWS CLI's --force option allows deletion of repositories even when they contain images.
+
 You should see the five repository names printed if all deletions succeed.
 ### 43.8 -- Verify ECR cleanup
 Run:
@@ -2219,12 +2220,15 @@ terraform destroy
 ```
 Enter yes when prompted.
 Terraform should recognize that the ECR repositories have already been removed and continue deleting the remaining managed resources.
+
 43.12 — Verify Terraform cleanup
+
 After terraform destroy finishes, run:
 ```bash
 terraform state list
 ```
 If everything Terraform manages has been deleted, this command should produce no output.
+
 Then verify the EKS cluster:
 ```bash
 aws eks list-clusters --region eu-north-1
@@ -2234,8 +2238,17 @@ check all are deleted or not in aws console login
 terminate the server and runner ec2 in browser
 
 
-This project demonstrates an end-to-end DevSecOps implementation for an Ecommerce microservices application on AWS EKS. I automated the CI/CD pipeline using GitHub Actions with a self-hosted runner, integrated SonarQube for code quality analysis and Trivy for vulnerability scanning, and used Docker and Amazon ECR for container image management.
-I provisioned the AWS infrastructure using Terraform and implemented GitOps-based deployment using Argo CD. The application runs on Kubernetes with five application components and PostgreSQL databases.
-For observability, I implemented Prometheus for metrics collection, Grafana for dashboards and Alertmanager for alert management. I also configured Grafana Alloy and Loki for centralized Kubernetes application logging, allowing service logs to be queried through Grafana.
+This project demonstrates an end-to-end DevSecOps implementation for an Ecommerce microservices application on AWS EKS. I automated the CI/CD pipeline using GitHub Actions 
+
+with a self-hosted runner, integrated SonarQube for code quality analysis and Trivy for vulnerability scanning, and used Docker and Amazon ECR for container image management.
+
+I provisioned the AWS infrastructure using Terraform and implemented GitOps-based deployment using Argo CD. The application runs on Kubernetes with five application 
+
+components and PostgreSQL databases.
+
+For observability, I implemented Prometheus for metrics collection, Grafana for dashboards and Alertmanager for alert management. I also configured Grafana Alloy and Loki for 
+
+centralized Kubernetes application logging, allowing service logs to be queried through Grafana.
+
 Finally, I documented the infrastructure cleanup process to avoid unnecessary AWS resource costs after completing the demonstration.
 

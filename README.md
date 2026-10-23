@@ -507,7 +507,7 @@ During configuration, use:
 | --- | --- |
 | Runner group | Press Enter |
 | Runner name | ecommerce-runner |
-| Additional labels | ecommerce-runner,docker,aws,trivy |
+| Additional labels | ecommerce-runner |
 | Work folder | Press Enter |
 Install the runner as a service:
 ```bash
@@ -1303,9 +1303,9 @@ sum(rate(container_cpu_usage_seconds_total{
   namespace="ecommerce",
   container!="",
   container!="POD"
-```
-}[5m]))
 
+}[5m]))
+```
 Click on Run Queries-->  click on Rightside navigation bar All Visualizations--> select Bar Chat-->Title: CPU usage -->Discription: CPU usage --> click on Save--> message:
 
 CPU usage --> save
@@ -1318,9 +1318,9 @@ sum(container_memory_working_set_bytes{
   namespace="ecommerce",
   container!="",
   container!="POD"
-```
-})
 
+})
+```
 ## STEP 38 — Configure Alertmanager
 
 Open Ecommerce server gitbash terminal

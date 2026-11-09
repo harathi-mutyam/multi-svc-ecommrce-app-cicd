@@ -1311,7 +1311,7 @@ Create your first Ecommerce Grafana dashboard
 
 Open Dashboards → New → New dashboard --> Add visualization. Right side panel click on + symbol (verify it later again click on + symbol)--> Select the Prometheus data 
 
-source.--> Enter the query--> sum(kube_pod_status_phase{namespace="ecommerce",phase="Running"})-->Click on Run queries button(button near the bottom-right of the query 
+source.--> Enter the query-->**sum(kube_pod_status_phase{namespace="ecommerce",phase="Running"})**-->Click on Run queries button(button near the bottom-right of the query 
 
 editor.)
 
@@ -1370,6 +1370,10 @@ Click on Run Queries-->  click on Rightside navigation bar All Visualizations-->
 
 CPU usage --> save
 
+<img width="1700" height="931" alt="image" src="https://github.com/user-attachments/assets/98e18596-9a6e-454b-b2fc-a1a4fb29cbd5" />
+
+
+
 
 <img width="940" height="511" alt="image" src="https://github.com/user-attachments/assets/6f1a993a-1c53-48d2-85cd-f6388b138921" />
 
@@ -1382,6 +1386,9 @@ sum(container_memory_working_set_bytes{
 
 })
 ```
+
+<img width="1017" height="586" alt="WhatsApp Image 2026-11-09 at 17 11 03" src="https://github.com/user-attachments/assets/054fd40c-86e5-4d7b-ae83-ca4c2f417020" />
+
 
 
 

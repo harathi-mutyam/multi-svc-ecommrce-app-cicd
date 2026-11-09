@@ -1346,6 +1346,9 @@ Discription: Ecommerce - Kubernetes Monitoring
 
 Then confirm Save.
 
+<img width="958" height="397" alt="WhatsApp Image 2026-11-09 at 17 07 39" src="https://github.com/user-attachments/assets/18478329-a6cf-412d-b2bf-4abc0b67f178" />
+
+
 
 Then in left navigation bar--> click on Dashboards-->You can see Ecommerce - Kubernetes Monitoring --> click on that one-->
 
@@ -1363,14 +1366,12 @@ sum(rate(container_cpu_usage_seconds_total{
 ```
 
 
-<img width="940" height="511" alt="image" src="https://github.com/user-attachments/assets/6f1a993a-1c53-48d2-85cd-f6388b138921" />
-
-
 Click on Run Queries-->  click on Rightside navigation bar All Visualizations--> select Bar Chat-->Title: CPU usage -->Discription: CPU usage --> click on Save--> message:
 
 CPU usage --> save
 
 
+<img width="940" height="511" alt="image" src="https://github.com/user-attachments/assets/6f1a993a-1c53-48d2-85cd-f6388b138921" />
 
 For memory usage:
 ```bash

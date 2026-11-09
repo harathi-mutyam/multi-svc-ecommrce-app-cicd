@@ -1306,6 +1306,11 @@ sum(rate(container_cpu_usage_seconds_total{
 
 }[5m]))
 ```
+
+
+<img width="940" height="511" alt="image" src="https://github.com/user-attachments/assets/6f1a993a-1c53-48d2-85cd-f6388b138921" />
+
+
 Click on Run Queries-->  click on Rightside navigation bar All Visualizations--> select Bar Chat-->Title: CPU usage -->Discription: CPU usage --> click on Save--> message:
 
 CPU usage --> save
@@ -1321,6 +1326,9 @@ sum(container_memory_working_set_bytes{
 
 })
 ```
+
+
+
 ## STEP 38 — Configure Alertmanager
 
 Open Ecommerce server gitbash terminal

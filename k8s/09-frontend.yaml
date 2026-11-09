@@ -51,7 +51,7 @@ metadata:
   name: frontend
   namespace: ecommerce
 spec:
-  type: LoadBalancer
+  type: ClusterIP
   selector:
     app: frontend
   ports:

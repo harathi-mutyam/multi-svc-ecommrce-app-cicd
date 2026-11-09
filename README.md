@@ -1390,6 +1390,8 @@ sum(container_memory_working_set_bytes{
 <img width="1017" height="586" alt="WhatsApp Image 2026-11-09 at 17 11 03" src="https://github.com/user-attachments/assets/054fd40c-86e5-4d7b-ae83-ca4c2f417020" />
 
 
+<img width="965" height="517" alt="WhatsApp Image 2026-11-09 at 17 12 56" src="https://github.com/user-attachments/assets/35180e99-f9e6-4c54-a861-64dc615408f4" />
+
 
 
 ## STEP 38 — Configure Alertmanager

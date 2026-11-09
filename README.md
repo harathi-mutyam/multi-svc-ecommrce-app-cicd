@@ -2,6 +2,10 @@
 
 CI/CD with GitHub Actions, SonarQube, Trivy, Docker and Amazon ECR | GitOps with Argo CD | Infrastructure as Code with Terraform | Monitoring and Centralized Logging with Prometheus, Grafana, Alertmanager, Loki and Alloy | AWS Resource Cleanup
  
+<img width="940" height="627" alt="image" src="https://github.com/user-attachments/assets/680184e7-a3af-4bf9-99dd-8f0c8e1613f6" />
+
+
+<img width="940" height="627" alt="image" src="https://github.com/user-attachments/assets/76675f2b-aba5-4a01-82cd-3cf7ba871114" />
 
  
 ## Start with these two EC2 instances
@@ -713,6 +717,11 @@ aws eks describe-cluster \
  
 ```
 
+<img width="263" height="141" alt="image" src="https://github.com/user-attachments/assets/41b7a980-9e59-4d39-978d-bcbd24054048" />
+
+
+
+
 ## Step 24: Configure Kubernetes access:
 
 ```bash
@@ -789,10 +798,22 @@ aws ecr describe-repositories \
   --query 'repositories[].repositoryName' \
   --output table
  
-cd ~/multi-svc-ecommrce-app-cicd
+
+
+
+
 ```
-ls 
+
+
+<img width="358" height="184" alt="image" src="https://github.com/user-attachments/assets/9aa295a5-2f3f-4d17-85c1-4a38bd00508f" />
+
+
 ```bash
+
+cd ~/multi-svc-ecommrce-app-cicd
+
+ls
+
 ls k8s/
 cat .github/workflows/ci-cd.yml
 ```
@@ -859,12 +880,20 @@ Or run the below command in server ec2 gitbash terminal
 
 ```bash
 aws ecr describe-images   --repository-name ecommerce/frontend   --region eu-north-1   --query 'imageDetails[].imageTags'
- 
+```
+
+<img width="334" height="181" alt="image" src="https://github.com/user-attachments/assets/93ab6e5b-79d4-4554-8e8e-fa9eadc7d58a" />
+
+
+```bash
 git pull origin main
 git log -3 --oneline
  
 ```
 Output will be 
+
+<img width="940" height="52" alt="image" src="https://github.com/user-attachments/assets/ef86bd73-bb52-46af-ac2e-0487c2c351a4" />
+
 
 ci: update Kubernetes images <commit-sha>
 
@@ -886,10 +915,13 @@ Wait until all required Argo CD components are ready.
 
 ```bash
 cd ~/multi-svc-ecommrce-app-cicd
-```
+
 vim argocd/application.yaml
+```
+
 replace with repoURL: with your github repository in yaml file save it
-Create the Argo CD Application
+
+**Create the Argo CD Application**
 ```bash
 kubectl apply -f argocd/application.yaml
 ```
@@ -898,7 +930,7 @@ Because automatic synchronization is enabled, Argo CD will begin deploying the m
 ```bash
 kubectl get applications -n argocd
 ```
-Verify Argo CD synchronization
+**Verify Argo CD synchronization**
 
 ```bash
 kubectl get applications -n argocd
@@ -907,7 +939,8 @@ kubectl get deployments -n ecommerce
 kubectl get pvc -n ecommerce
 kubectl get svc -n ecommerce
 ```
-Check Argo CD health
+
+**Check Argo CD health**
 
 ```bash
 kubectl describe application ecommerce -n argocd
@@ -923,7 +956,10 @@ kubectl get pvc -n ecommerce
  
 
 ```
-Check the live Kubernetes configuration
+<img width="940" height="76" alt="image" src="https://github.com/user-attachments/assets/f715370c-1b32-41c3-8179-e42ae79b8c54" />
+
+
+**Check the live Kubernetes configuration**
 ```bash
 for db in order-db product-db user-db; do
   echo "===== $db ====="
@@ -932,7 +968,7 @@ for db in order-db product-db user-db; do
 Done
 
 ```
-Verify database readiness
+**Verify database readiness**
 
 ```bash
 for db in order-db product-db user-db; do
@@ -941,11 +977,14 @@ for db in order-db product-db user-db; do
 done
 
 kubectl get pods -n ecommerce
- 
+ ```
+<img width="940" height="202" alt="image" src="https://github.com/user-attachments/assets/d6d56b00-f5af-4509-9e8c-b85eebbacf98" />
 
+
+```bash
 kubectl get svc frontend -n ecommerce
-```
-copy the loadbalancer dns name ada50eb750e674f2dbf0b8f6c0d7dd00-661072552.eu-north-1.elb.amazonaws.com
+
+**copy the loadbalancer dns name** ada50eb750e674f2dbf0b8f6c0d7dd00-661072552.eu-north-1.elb.amazonaws.com
 
 ```bash
 curl -I <paste it here>
@@ -1005,12 +1044,15 @@ ssh -i ~/Downloads/ecommerce-key.pem \
   -L 8080:localhost:8080 \
   ubuntu@<ECOMMERCE_SERVER_PUBLIC_IP>
  ```
+
 Replace <ECOMMERCE_SERVER_PUBLIC_IP> with your actual EC2 public IP.
 
 For login enter username: enter admin password: enter saved secret
 
 You can observe healthy and synched
 
+
+<img width="940" height="490" alt="image" src="https://github.com/user-attachments/assets/e6dbe2ee-667e-4e13-a76d-d1c8053bbaca" />
 
 
 
@@ -1066,6 +1108,9 @@ kubectl get crd servicemonitors.monitoring.coreos.com
 kubectl get svc -n monitoring
  
 ```
+
+<img width="535" height="274" alt="image" src="https://github.com/user-attachments/assets/67f6f1f6-b5d3-46f7-b152-fd16d54de2f5" />
+
 
 ## Step 32: Granafana for monitoring
 
@@ -1160,6 +1205,10 @@ Open browser-->http://ecomerce-server-publicip:9090
 
 After open the Prometheus in browser, navigate to Status → Target health to inspect scrape targets. 
 
+
+<img width="940" height="404" alt="image" src="https://github.com/user-attachments/assets/fa5ccdbf-c120-4480-9ff8-f79ef9e0242d" />
+
+
  
 You can see all are Status: UP
 
@@ -1175,7 +1224,11 @@ Connections (in the left sidebar)→ Data sources → Prometheus → click Test
 
 If the connection succeeds again, return to Explore and run
 
-Click on Explore(in the left sidebar )--> here  type: up-->   click on this symbol
+Click on Explore(in the left sidebar )--> here  
+<img width="553" height="53" alt="image" src="https://github.com/user-attachments/assets/2a3a9721-e194-4754-96fc-99b877c86121" />
+ 
+ type: up-->   click on this symbol <img width="119" height="101" alt="image" src="https://github.com/user-attachments/assets/3b1f9425-c22e-4591-8c50-66a4c324f958" />
+
 
 ```bash
 kubectl get servicemonitors -A
@@ -1236,6 +1289,8 @@ Click on Status--> Target Health
 Look for: user-service, product-service, order-service if all are UP means metrics endpoints are correctly configured.
 
  
+ <img width="940" height="435" alt="image" src="https://github.com/user-attachments/assets/2c8f7064-e302-4872-b631-918ded950de5" />
+
 
 
 ## Step 37 :Verify Grafana data source
@@ -1351,14 +1406,19 @@ kubectl get prometheus kube-prometheus-stack-prometheus \
   -n monitoring \
   -o jsonpath='{.spec.ruleSelector}{"\n"}'
 ```
+
+
+
 **Open Prometheus in Browser:**
 
 http://YOUR_ECOMMERCE_SERVER_PUBLIC_IP:9090
 
 Navigate to Status → Rules or Alerts, depending on your Prometheus version.
 
+ <img width="940" height="443" alt="image" src="https://github.com/user-attachments/assets/107fc8d3-1bbe-4f2a-aa5f-df3a35fe88f0" />
  
-Open ecommerce server gitbash terminal
+
+**Open ecommerce server gitbash terminal**
 ```bash
 cd multi-svc-ecommrce-app-cicd
 
@@ -1367,6 +1427,9 @@ curl -s http://localhost:9090/api/v1/rules \
 
  
 ```
+<img width="698" height="75" alt="image" src="https://github.com/user-attachments/assets/d6c56d6b-896a-4c86-869e-06a74bd83f8b" />
+
+
 Alert rule	State	Health
 
 | EcommercePodNotReady | Inactive | OK |
@@ -1881,6 +1944,10 @@ Then open Explore, select the Loki data source at the top,--> switch to Code mod
 Click Run query
 This query retrieves logs collected from containers in the ecommerce namespace.
 If logs are available, you should see timestamped log lines.
+
+
+<img width="940" height="448" alt="image" src="https://github.com/user-attachments/assets/03c54827-ad68-4330-a29f-6677a5a97ee5" />
+
  
 You can also filter logs by service:
 ```bash
@@ -1931,7 +1998,13 @@ Once {namespace="ecommerce"} returns logs, try filtering by container.
 
 
  
- 
+ <img width="921" height="590" alt="image" src="https://github.com/user-attachments/assets/aa2c6d6d-92cf-46d9-b33c-519c40b9d230" />
+
+
+<img width="940" height="455" alt="image" src="https://github.com/user-attachments/assets/b50bc5c2-e707-4c74-ab60-a433b90357ee" />
+
+
+<img width="940" height="447" alt="image" src="https://github.com/user-attachments/assets/5387a688-5d36-4c77-9dc9-58ed37b832b5" />
 
 
 These queries assume the container names match the service names. If a query returns no data, inspect the actual container names with:
@@ -2003,6 +2076,7 @@ Finally, click Save dashboard and enter:
 
 Dashboard name: Ecommerce - Application Logs
  
+<img width="940" height="436" alt="image" src="https://github.com/user-attachments/assets/10fb6036-0aa9-4c7e-9e8e-634bdb5b74f4" />
 
 
 Finally, click Save dashboard and enter:
